@@ -1,11 +1,36 @@
 import { useEffect, useState } from "react";
 import type { Policy } from "./types/Policy";
 import PolicyCard from "./components/PolicyCard";
+import FilterPanel from "./components/FilterPanel";
+import "./App.css";
 
 function App() {
   const [policies, setPolicies] = useState<Policy[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+
+  const [appliedProducts, setAppliedProducts] = useState<string[]>([]);
+  const [appliedStatuses, setAppliedStatuses] = useState<string[]>([]);
+
+  const filteredPolicies = policies.filter((policy) => {
+    const matchesProduct =
+      appliedProducts.length === 0 ||
+      appliedProducts.includes(policy.productName);
+
+    const matchesStatus =
+      appliedStatuses.length === 0 ||
+      appliedStatuses.includes(policy.policyStatus);
+
+    return matchesProduct && matchesStatus;
+  });
+
+   const productOptions = [
+  ...new Set(policies.map((policy) => policy.productName)),
+];
 
   useEffect(() => {
     async function fetchPolicies() {
@@ -33,33 +58,73 @@ function App() {
     fetchPolicies();
   }, []);
 
-return (
-  <main className="page">
-    <div className="page__content">
-      <h1 className="page__title">Mina försäkringar</h1>
+  function handleProductChange(product: string) {
+  setSelectedProducts((current) =>
+    current.includes(product)
+      ? current.filter((item) => item !== product)
+      : [...current, product]
+  );
+}
 
-      {isLoading && <p>Laddar försäkringar...</p>}
+function handleStatusChange(status: string) {
+  setSelectedStatuses((current) =>
+    current.includes(status)
+      ? current.filter((item) => item !== status)
+      : [...current, status]
+  );
+}
 
-      {error && <p>{error}</p>}
+function handleApplyFilters() {
+  setAppliedProducts(selectedProducts);
+  setAppliedStatuses(selectedStatuses);
+  setIsFilterOpen(false);
+}
 
-      {!isLoading && !error && policies.length === 0 && (
-        <p>Inga försäkringar hittades.</p>
-      )}
+  return (
+    <main className="page">
+      <div className="page__content">
+        <h1 className="page__title">Mina försäkringar</h1>
 
-      {!isLoading && !error && policies.length > 0 && (
-        <div className="policy-list">
-          {policies.map((policy) => (
-            <PolicyCard
-              key={policy.policyNumber}
-              policy={policy}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  </main>
-);
+        <button
+          type="button"
+          onClick={() => setIsFilterOpen(true)}
+        >
+          Filtrera
+        </button>
 
+        {isFilterOpen && (
+         <FilterPanel
+          products={productOptions}
+          selectedProducts={selectedProducts}
+          selectedStatuses={selectedStatuses}
+          onProductChange={handleProductChange}
+          onStatusChange={handleStatusChange}
+          onApply={handleApplyFilters}
+          onClose={() => setIsFilterOpen(false)}
+/>
+        )}
+
+        {isLoading && <p>Laddar försäkringar...</p>}
+
+        {error && <p>{error}</p>}
+
+        {!isLoading && !error && filteredPolicies.length === 0 && (
+          <p>Inga försäkringar hittades.</p>
+        )}
+
+        {!isLoading && !error && filteredPolicies.length > 0 && (
+          <div className="policy-list">
+            {filteredPolicies.map((policy) => (
+              <PolicyCard
+                key={policy.policyNumber}
+                policy={policy}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </main>
+  );
 }
 
 export default App;

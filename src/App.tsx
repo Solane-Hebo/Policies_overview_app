@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { Policy } from "./types/Policy";
-import PolicyCard from "./components/PolicyCard";
-import FilterPanel from "./components/FilterPanel";
+import PolicyCard from "./components/policyCard/PolicyCard";
+import FilterPanel from "./components/filterPanel/FilterPanel";
 import "./App.css";
 
 function App() {
@@ -9,6 +9,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const filterPanelRef = useRef<HTMLDivElement | null>(null);
 
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
@@ -58,6 +59,15 @@ function App() {
     fetchPolicies();
   }, []);
 
+  useEffect(() => {
+  if (isFilterOpen && window.innerWidth <= 760) {
+    filterPanelRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
+}, [isFilterOpen]);
+
   function handleProductChange(product: string) {
   setSelectedProducts((current) =>
     current.includes(product)
@@ -80,51 +90,66 @@ function handleApplyFilters() {
   setIsFilterOpen(false);
 }
 
-  return (
-    <main className="page">
-      <div className="page__content">
-        <h1 className="page__title">Mina försäkringar</h1>
+function handleOpenFilter() {
+  setIsFilterOpen(true);
+}
 
-        <button
-          type="button"
-          onClick={() => setIsFilterOpen(true)}
-        >
-          Filtrera
-        </button>
+ return (
+  <main className="page">
+    <div className="page__content">
+      <h1 className="page__title">Mina Försäkringar</h1>
+
+      <div className="overview-layout">
+        <section className="overview-main">
+          <div className="overview-toolbar">
+            <span></span>
+
+            <button
+              className="filter-button"
+              type="button"
+              onClick={handleOpenFilter}
+            >
+              Filtrera
+            </button>
+          </div>
+
+          {isLoading && <p>Laddar försäkringar...</p>}
+
+          {error && <p>{error}</p>}
+
+          {!isLoading && !error && filteredPolicies.length === 0 && (
+            <p>Inga försäkringar hittades.</p>
+          )}
+
+          {!isLoading && !error && filteredPolicies.length > 0 && (
+            <div className="policy-list">
+              {filteredPolicies.map((policy) => (
+                <PolicyCard
+                  key={policy.policyNumber}
+                  policy={policy}
+                />
+              ))}
+            </div>
+          )}
+        </section>
 
         {isFilterOpen && (
-         <FilterPanel
-          products={productOptions}
-          selectedProducts={selectedProducts}
-          selectedStatuses={selectedStatuses}
-          onProductChange={handleProductChange}
-          onStatusChange={handleStatusChange}
-          onApply={handleApplyFilters}
-          onClose={() => setIsFilterOpen(false)}
-/>
-        )}
-
-        {isLoading && <p>Laddar försäkringar...</p>}
-
-        {error && <p>{error}</p>}
-
-        {!isLoading && !error && filteredPolicies.length === 0 && (
-          <p>Inga försäkringar hittades.</p>
-        )}
-
-        {!isLoading && !error && filteredPolicies.length > 0 && (
-          <div className="policy-list">
-            {filteredPolicies.map((policy) => (
-              <PolicyCard
-                key={policy.policyNumber}
-                policy={policy}
-              />
-            ))}
-          </div>
-        )}
+  <div ref={filterPanelRef} className="filter-panel-wrapper">
+    <FilterPanel
+      products={productOptions}
+      selectedProducts={selectedProducts}
+      selectedStatuses={selectedStatuses}
+      onProductChange={handleProductChange}
+      onStatusChange={handleStatusChange}
+      onApply={handleApplyFilters}
+      onClose={() => setIsFilterOpen(false)}
+    />
+  </div>
+)}
       </div>
-    </main>
-  );
+    </div>
+  </main>
+);
 }
 
 export default App;

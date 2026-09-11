@@ -1,4 +1,4 @@
-import type { Policy } from "../types/Policy";
+import type { Policy } from "../../types/Policy";
 import "./PolicyCard.css";
 
 interface PolicyCardProps {

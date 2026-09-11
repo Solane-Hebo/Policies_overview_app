@@ -1,3 +1,5 @@
+import "./FilterPanel.css";
+
 interface FilterPanelProps {
   products: string[];
   selectedProducts: string[];
@@ -31,22 +33,22 @@ function FilterPanel({
         </button>
       </div>
 
-      <div>
+      <div className="filter-panel__section">
         <h3>Typ av försäkring</h3>
 
         {products.map((product) => (
-  <label key={product}>
-    <input
-      type="checkbox"
-      checked={selectedProducts.includes(product)}
-      onChange={() => onProductChange(product)}
-    />
-    {product}
-  </label>
-))}
+          <label key={product}>
+            <input
+              type="checkbox"
+              checked={selectedProducts.includes(product)}
+              onChange={() => onProductChange(product)}
+            />
+            {product}
+          </label>
+        ))}
       </div>
 
-      <div>
+      <div className="filter-panel__section">
         <h3>Status</h3>
 
         <label>

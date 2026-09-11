@@ -1,66 +1,109 @@
-# Rekryteringscase – Försäkringsöversikt
+# Försäkringsöversikt
 
-Välkommen! Det här är ett litet kodcase som vi använder för att se hur du tänker och kodar. Det är okej att använda AI-verktyg – vi förutsätter bara att du förstår all kod du lämnar in och kan förklara dina val.
+Frontend-lösning för Gjensidiges rekryteringscase.
 
-## Tidsuppskattning
+Applikationen visar en kunds försäkringar och gör det möjligt att filtrera dem utifrån försäkringstyp och status. Lösningen är byggd med React och TypeScript och utgår från den bifogade designen.
 
-Räkna med ungefär **3–4 timmar**. Det är helt okej om inte allt hinns med eller är perfekt – vi tittar på koden du skrivit och pratar om dina val.
+## Funktionalitet
 
-## Uppgiften
+- Hämtar försäkringar från API
+- Hanterar loading-, error- och empty state
+- Visar försäkringar som återanvändbara kort
+- Filtrering på försäkringstyp
+- Filtrering på status
+- Filtren appliceras först när användaren klickar på "Visa försäkringar"
+- Inaktiva försäkringar markeras med en statusindikator
+- Paginering med 5 försäkringar per sida
+- Resultattext som visar aktuellt intervall, exempelvis "Visar 1–5 av 15 försäkringar"
+- Responsiv layout för desktop, surfplatta och mobil
+- På mindre skärmar scrollas användaren till filterpanelen när den öppnas
 
-Bygg en vy där en kund kan se en översikt av sina tecknade försäkringar.
+## Teknik
 
-### Datahämtning
+Projektet är byggt med:
 
-Hämta försäkringar från följande endpoint:
+- React
+- TypeScript
+- Vite
+- CSS
+- Fetch API
 
-```
+Jag har valt att använda Reacts inbyggda funktionalitet och vanlig CSS utan ytterligare komponent- eller stylingbibliotek eftersom applikationen är relativt liten och inte kräver extra beroenden.
+
+## Struktur
+
+Applikationen är uppdelad i mindre komponenter med tydliga ansvarsområden:
+
+- `App` – datahämtning, state, filtrering och övergripande logik
+- `PolicyCard` – presentation av en försäkring
+- `FilterPanel` – val av produkt- och statusfilter
+- `Pagination` – sidnavigering och information om aktuellt resultatintervall
+- `Policy` – TypeScript-typ för API-datan
+
+## Filtrering
+
+Applikationen skiljer på valda och applicerade filter.
+
+Checkboxarna uppdaterar användarens val, men själva försäkringslistan filtreras först när användaren klickar på **"Visa försäkringar"**.
+
+Det gör det möjligt att göra flera val innan filtreringen appliceras och följer beteendet i uppgiften.
+
+När nya filter appliceras återställs pagineringen till första sidan.
+
+## Responsivitet
+
+Layouten anpassas för mindre skärmar.
+
+På desktop visas filterpanelen bredvid försäkringslistan. På mindre skärmar anpassas layouten och `scrollIntoView` används när filterpanelen öppnas för att göra filtret lättare att nå.
+
+## API
+
+Försäkringarna hämtas från:
+
+```text
 GET {VITE_API_BASE_URL}/policies/List
 ```
 
-Se till att hantera de tre tillstånden som kan uppstå vid hämtning:
+API-adressen konfigureras via miljövariabeln:
 
-- **Loading** – nåt händer, visa det för användaren
-- **Error** – något gick fel, visa ett felmeddelande
-- **Tomt svar** – inga försäkringar hittades, visa ett tomt tillstånd
-
-### Funktionalitet
-
-Användaren ska kunna:
-
-- Filtrera listan på **produktnamn**
-- Filtrera listan på **status**
-- **Bonus:** Paginering där 5 kort visas per sida (om tid finns)
-
-### Design
-
-Följ den bifogade designen så gott det går. Du hittar den i [`src/assets/overview.png`](src/assets/overview.png).
-
-Några saker att notera i designen:
-
-- **Filterpanelen är dold som standard** – den öppnas via "Filtrera"-knappen och stängs med krysset
-- **Filtren appliceras via en knapp** – "Visa försäkringar" i panelen triggar filtreringen (inte live-filtrering)
-- **Inaktiva kort får en indikator** – en röd tagg ("Din försäkring har avslutats") visas i kortets header
-- **Paginerings-texten** – "Visar 1–5 av 15 försäkringar" visas under pagineringen och ska reflektera aktuellt urval
-
-## Tekniska riktlinjer
-
-- Projektet är uppsatt med **TypeScript** – vi vill se typade props och API-respons
-- Tredjepartsbibliotek är tillåtna (t.ex. för datahämtning eller styling)
-- Vi ser gärna att du bygger egna komponenter istället för att använda ett komponentbibliotek
-- Vyn ska fungera bra på mindre skärmar (surfplatta/mobil)
-
-## Git
-
-Skapa ett eget repo på GitHub (eller motsvarande) och committa löpande under arbetets gång. Undvik att samla allt i en enda stor commit i slutet.
-
-## Inlämning
-
-Skicka länken till ditt repo via mail till [erika.loman-frost@gjensidige.se](mailto:erika.loman-frost@gjensidige.se).
+```text
+VITE_API_BASE_URL
+```
 
 ## Kom igång
 
+Projektet har utvecklats och testats med npm.
+
+Installera dependencies:
+
 ```bash
-yarn install
-yarn dev
+npm install
 ```
+
+Starta utvecklingsservern:
+
+```bash
+npm run dev
+```
+
+Bygg projektet:
+
+```bash
+npm run build
+```
+
+Kör lint:
+
+```bash
+npm run lint
+```
+
+## Design
+
+Implementationen utgår från designreferensen:
+
+```text
+src/assets/overview.png
+```
+
+Fokus har varit att efterlikna designen samtidigt som gränssnittet fungerar responsivt på olika skärmstorlekar.

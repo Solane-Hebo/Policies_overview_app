@@ -6,7 +6,7 @@ interface PolicyCardProps {
 }
 
 function PolicyCard({ policy }: PolicyCardProps) {
-  const monthlyPrice = policy.yearlyPrice / 12;
+  const monthlyPrice = (policy.yearlyPrice / 12).toFixed(2);
 
   return (
     <article className="policy-card">

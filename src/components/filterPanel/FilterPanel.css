@@ -1,0 +1,70 @@
+.filter-panel {
+  width: 260px;
+  padding: 18px;
+  border: 1px solid #cbd6eb;
+  background: #edf2fb;
+  color: #10183e;
+}
+
+.filter-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.filter-panel__header h2 {
+  display: none;
+}
+
+.filter-panel__header button {
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #10183e;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.filter-panel__section {
+  margin-bottom: 18px;
+}
+
+.filter-panel__section h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.filter-panel label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 9px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.filter-panel input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: #0b1235;
+}
+
+.filter-panel > button {
+  margin-top: 4px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 3px;
+  background: #080f3a;
+  color: #ffffff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .filter-panel {
+    width: 100%;
+  }
+}

@@ -1,22 +1,23 @@
-:root {
-  --helvetica: helvetica, 'Arial', sans-serif;
+* {
+  box-sizing: border-box;
 }
 
+html,
+body,
 #root {
-  font-family: var(--helvetica);
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  min-height: 100svh;
+  margin: 0;
+  min-height: 100%;
 }
 
 body {
-  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: #0b1235;
 }
 
-h1,
-h2 {
-  font-size: 3.5rem;
-  font-weight: 400;
+button,
+input {
+  font: inherit;
 }
